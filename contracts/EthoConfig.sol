@@ -30,8 +30,11 @@ contract EthoConfig {
     }
     
     event AddAddressEntry(address indexed addressAdded, string addressDescription, uint addressCounter);
+    event UpdateAddressEntry(uint entry, address indexed newAddress);
     event AddStringEntry(string indexed stringAdded, string stringDescription, uint stringCounter);
+    event UpdateStringEntry(uint entry, string indexed newString);
     event AddUintEntry(uint indexed uintAdded, string uintDescription, uint uintCounter);
+    event UpdateUintEntry(uint entry, uint indexed newUint);
     event TransferOwnership(address indexed previousOwner, address indexed newOwner);
     event TransferOperator(address indexed previousOperator, address indexed newOperator);
     
@@ -42,6 +45,11 @@ contract EthoConfig {
         emit AddAddressEntry(_address, _description, addressMapCounter);
     }
     
+    function updateAddressEntry(uint _entry, address _address) public restrictedOperator {
+        addressMap[_entry] = _address;
+        emit UpdateAddressEntry(_entry, _address);
+    }
+    
     function addStringEntry(string memory _string, string memory _description) public restrictedOperator {
         stringMap[stringMapCounter] = _string;
         stringMapDescriptions[stringMapCounter] = _description;
@@ -49,11 +57,21 @@ contract EthoConfig {
         emit AddStringEntry(_string, _description, stringMapCounter);
     }
     
+    function updateStringEntry(uint _entry, string memory _string) public restrictedOperator {
+        stringMap[_entry] = _string;
+        emit UpdateStringEntry(_entry, _string);
+    }
+    
     function addUintEntry(uint _uint, string memory _description) public restrictedOperator {
         uintMap[uintMapCounter] = _uint;
         uintMapDescriptions[uintMapCounter] = _description;
         uintMapCounter++;
         emit AddUintEntry(_uint, _description, uintMapCounter);
+    }
+    
+    function updateUintEntry(uint _entry, uint _uint) public restrictedOperator {
+        uintMap[_entry] = _uint;
+        emit UpdateUintEntry(_entry, _uint);
     }
     
     function transferOwnership(address _newOwner) public restricted {
